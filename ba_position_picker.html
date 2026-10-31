@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Cabin Crew Positions</title>
+  
+  <!-- Apple Mobile Web App Settings for iPhone -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Positions">
+  <meta name="theme-color" content="#061226">
+  <link rel="apple-touch-icon" id="appleTouchIcon">
+  <link rel="manifest" id="manifestLink">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            ba: {
+              navy: '#071630',
+              deepNavy: '#030a16',
+              card: '#0f2243',
+              cardBorder: '#203d6d',
+              red: '#EB2226',
+              blue: '#133a75',
+              sky: '#38bdf8',
+              gold: '#F59E0B',
+              muted: '#94a3b8'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* iOS Safe Area & Interaction Tuning */
+    :root {
+      --sat: env(safe-area-inset-top, 0px);
+      --sab: env(safe-area-inset-bottom, 0px);
+      --sal: env(safe-area-inset-left, 0px);
+      --sar: env(safe-area-inset-right, 0px);
+    }
+    body {
+      padding-top: var(--sat);
+      padding-bottom: max(var(--sab), 28px);
+      padding-left: var(--sal);
+      padding-right: var(--sar);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Cabin Color Left Accent Strips */
+    .border-cabin-first {
+      border-left: 4px solid #F59E0B !important;
+    }
+    .border-cabin-cw {
+      border-left: 4px solid #38bdf8 !important;
+    }
+    .border-cabin-wt {
+      border-left: 4px solid #34d399 !important;
+    }
+
+    /* Taken position visual state: Crisp, solid & legible under briefing lights */
+    .pos-card.taken {
+      background-color: #040914 !important;
+      border-color: #0e1b2f !important;
+      border-left-color: #1a283e !important;
+      opacity: 0.45;
+    }
+    .pos-card.taken .pos-badge {
+      background: #172033 !important;
+      color: #64748b !important;
+      border-color: #27354a !important;
+      box-shadow: none !important;
+    }
+    .pos-card.taken .pos-title {
+      text-decoration: line-through;
+      color: #64748b !important;
+    }
+    .pos-card.taken .cabin-subtitle {
+      color: #475569 !important;
+    }
+    .pos-card.taken .door-pill {
+      background-color: #091322 !important;
+      color: #64748b !important;
+      border-color: #172437 !important;
+    }
+    .pos-card.taken .break-tag {
+      opacity: 0.35;
+    }
+
+    /* "MY PICK" Highlighted State */
+    .pos-card.my-pick {
+      background: linear-gradient(145deg, #102a54, #1d437d) !important;
+      border-color: #F59E0B !important;
+      border-left: 4px solid #F59E0B !important;
+      box-shadow: 0 0 18px rgba(245, 158, 11, 0.4);
+      opacity: 1 !important;
+    }
+    .pos-card.my-pick .pos-badge {
+      background: linear-gradient(135deg, #F59E0B, #d97706) !important;
+      color: #030a16 !important;
+      border-color: #fbbf24 !important;
+      font-weight: 900;
+    }
+
+    /* Center Aisle Dotted Line */
+    .aisle-divider {
+      position: absolute;
+      top: 24px;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1px;
+      border-left: 1.5px dashed rgba(56, 189, 248, 0.28);
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body class="bg-ba-deepNavy text-slate-100 min-h-screen flex flex-col antialiased">
+
+  <!-- TOP HEADER -->
+  <header class="sticky top-0 z-30 bg-ba-navy/95 backdrop-blur border-b border-ba-cardBorder px-3.5 py-2.5 shadow-md">
+    <div class="max-w-xl mx-auto flex items-center justify-between">
+      
+      <!-- Bespoke App Logo & Active Aircraft -->
+      <div class="flex items-center space-x-2.5">
+        <!-- Modern Aviation Winglet / Station Emblem (Generic, trademark-safe & professional) -->
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-ba-blue via-[#0d2754] to-ba-deepNavy border border-ba-sky/40 flex items-center justify-center shadow-md relative overflow-hidden group">
+          <svg class="w-5 h-5 text-ba-sky" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.3c.4-.2.6-.6.5-1.1z"/>
+          </svg>
+          <div class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-ba-gold rounded-full blur-[1px]"></div>
+        </div>
+
+        <div>
+          <h1 class="text-sm font-bold tracking-tight text-white flex items-center gap-1.5">
+            <span id="headerFleetName">Boeing 777-200ER</span>
+            <span id="headerFleetCode" class="text-ba-sky font-mono text-xs bg-ba-deepNavy px-1.5 py-0.5 rounded border border-ba-sky/40 font-bold">77M</span>
+          </h1>
+          <div class="text-[10px] text-slate-300 font-mono tracking-tight font-medium" id="headerFleetConfig">F8 / CW49 / WTP40 / WT138</div>
+        </div>
+      </div>
+
+      <!-- Header Action Buttons: Install & Reset -->
+      <div class="flex items-center space-x-2">
+        <button id="pwaInstallBtn" onclick="openInstallModal()" class="hidden px-2.5 py-1.5 rounded-lg bg-ba-sky/20 border border-ba-sky/40 text-ba-sky active:bg-ba-sky/30 text-xs font-semibold items-center gap-1">
+          <span>📲</span>
+          <span class="text-[11px]">Install</span>
+        </button>
+        <button onclick="confirmReset()" class="px-2.5 py-1.5 rounded-lg bg-red-950/70 border border-red-700/80 text-red-200 active:bg-red-900/80 text-xs font-semibold flex items-center gap-1 transition-colors">
+          <span>↺</span>
+          <span>Reset</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN VIEW CONTAINER -->
+  <main class="flex-1 max-w-xl w-full mx-auto p-3 space-y-3">
+
+    <!-- 1. FLEET SELECTOR STRIP -->
+    <div class="space-y-1">
+      <div class="flex items-center justify-between text-[11px] text-slate-300 font-mono uppercase px-1">
+        <span>Fleet Selection</span>
+        <span class="text-ba-sky font-bold" id="activeFleetIndicator">Active: 77M</span>
+      </div>
+      <div class="flex overflow-x-auto gap-1.5 pb-1 no-scrollbar items-center">
+        
+        <!-- 787s -->
+        <div class="flex items-center bg-ba-deepNavy p-0.5 rounded-lg border border-ba-cardBorder gap-1 shrink-0">
+          <span class="text-[9px] font-black text-slate-400 font-mono px-1">787</span>
+          <button onclick="setFleet('78E')" id="btn-78E" class="fleet-btn px-2.5 py-1 text-xs font-mono font-bold rounded-md transition-colors">78E</button>
+          <button onclick="setFleet('789')" id="btn-789" class="fleet-btn px-2.5 py-1 text-xs font-mono font-bold rounded-md transition-colors">789</button>
+          <button onclick="setFleet('78N')" id="btn-78N" class="fleet-btn px-2.5 py-1 text-xs font-mono font-bold rounded-md transition-colors">78N</button>
+          <button onclick="setFleet('781')" id="btn-781" class="fleet-btn px-2.5 py-1 text-xs font-mono font-bold rounded-md transition-colors">781</button>
+          <button onclick="setFleet('78Z')" id="btn-78Z" class="fleet-btn px-2.5 py-1 text-xs font-mono font-bold rounded-md transition-colors">78Z</button>
+        </div>
+
+        <!-- 777s -->
+        <div class="flex items-center bg-ba-deepNavy p-0.5 rounded-lg border border-ba-cardBorder gap-1 shrink-0">
+          <span class="text-[9px] font-black text-slate-400 font-mono px-1">777</span>
+          <button onclick="setFleet('77M')" id="btn-77M" class="fleet-btn px-2.5 py-1 text-xs font-mono font-bold rounded-md transition-colors">77M</button>
+          <button onclick="setFleet('77L')" id="btn-77L" class="fleet-btn px-2.5 py-1 text-xs font-mono font-bold rounded-md transition-colors">77L</button>
+          <button onclick="setFleet('77H')" id="btn-77H" class="fleet-btn px-2.5 py-1 text-xs font-mono font-bold rounded-md transition-colors">77H</button>
+        </div>
+
+        <!-- A350 -->
+        <div class="flex items-center bg-ba-deepNavy p-0.5 rounded-lg border border-ba-cardBorder gap-1 shrink-0">
+          <span class="text-[9px] font-black text-slate-400 font-mono px-1">A350</span>
+          <button onclick="setFleet('351')" id="btn-351" class="fleet-btn px-2.5 py-1 text-xs font-mono font-bold rounded-md transition-colors">351</button>
+        </div>
+
+        <!-- A380 -->
+        <div class="flex items-center bg-ba-deepNavy p-0.5 rounded-lg border border-ba-cardBorder gap-1 shrink-0">
+          <span class="text-[9px] font-black text-slate-400 font-mono px-1">A380</span>
+          <button onclick="setFleet('38A')" id="btn-38A" class="fleet-btn px-2.5 py-1 text-xs font-mono font-bold rounded-md transition-colors">38A</button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 2. CREW COMPLIMENT & REST SUMMARY CARD -->
+    <div class="bg-ba-card border border-ba-cardBorder rounded-xl p-2.5 space-y-2 shadow-sm">
+      
+      <!-- Compliment Buttons & Status -->
+      <div class="flex items-center justify-between gap-1.5 flex-wrap">
+        <div class="flex items-center space-x-1" id="complimentButtonGroup">
+          <!-- Dynamically inserted pills (e.g. Full 11 / 12 Crew) -->
+        </div>
+
+        <!-- Layout Toggle: Aircraft vs Grid -->
+        <div class="flex items-center gap-1 bg-ba-deepNavy p-0.5 rounded-lg border border-ba-cardBorder shrink-0">
+          <button onclick="setViewMode('aircraft')" id="view-aircraft" class="view-btn px-2 py-0.5 rounded text-[11px] font-semibold transition-colors" title="Aircraft Left/Right Doors">
+            ✈️ Doors
+          </button>
+          <button onclick="setViewMode('grid')" id="view-grid" class="view-btn px-2 py-0.5 rounded text-[11px] font-semibold transition-colors" title="Numerical Grid">
+            ⊞ Grid
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Filter Bar with Integrated Live Counters -->
+      <div class="pt-1.5 border-t border-ba-cardBorder/60 flex items-center gap-1 bg-ba-deepNavy p-1 rounded-lg border border-ba-cardBorder overflow-x-auto no-scrollbar">
+        <button onclick="setFilter('all')" id="flt-all" class="filter-btn px-2 py-1 rounded text-[11px] font-semibold transition-colors whitespace-nowrap">
+          All <span id="counterAll" class="opacity-80 font-mono text-[10px] ml-0.5">(11)</span>
+        </button>
+        <button onclick="setFilter('open')" id="flt-open" class="filter-btn px-2 py-1 rounded text-[11px] font-semibold transition-colors whitespace-nowrap">
+          Open <span id="counterOpenPill" class="text-ba-sky font-mono text-[10px] ml-0.5 font-bold">(11)</span>
+        </button>
+        <button onclick="setFilter('rest1')" id="flt-rest1" class="filter-btn px-2 py-1 rounded text-[11px] font-semibold transition-colors whitespace-nowrap">
+          1st Break <span id="counterRest1" class="font-mono text-[10px] ml-0.5">(6)</span>
+        </button>
+        <button onclick="setFilter('rest2')" id="flt-rest2" class="filter-btn px-2 py-1 rounded text-[11px] font-semibold transition-colors whitespace-nowrap">
+          2nd Break <span id="counterRest2" class="font-mono text-[10px] ml-0.5">(5)</span>
+        </button>
+        <button onclick="setFilter('go')" id="flt-go" class="filter-btn px-2 py-1 rounded text-[11px] font-semibold transition-colors whitespace-nowrap">
+          Galley 👨‍🍳
+        </button>
+      </div>
+
+      <!-- A380 DECK SWITCHER (Only shown when 38A is selected) -->
+      <div id="deckToggleContainer" class="hidden pt-2 border-t border-ba-cardBorder flex items-center justify-between text-xs">
+        <span class="text-[11px] text-slate-300 font-mono font-medium">A380 Deck:</span>
+        <div class="flex items-center gap-1 bg-ba-deepNavy p-0.5 rounded-lg border border-ba-cardBorder">
+          <button onclick="setDeckFilter('all')" id="deck-all" class="deck-btn px-2.5 py-0.5 rounded text-[11px] font-semibold">All Decks</button>
+          <button onclick="setDeckFilter('Main')" id="deck-main" class="deck-btn px-2.5 py-0.5 rounded text-[11px] font-semibold">Main Deck</button>
+          <button onclick="setDeckFilter('Upper')" id="deck-upper" class="deck-btn px-2.5 py-0.5 rounded text-[11px] font-semibold">Upper Deck</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 3. POSITION LIST CONTAINER -->
+    <div id="positionsContainer" class="space-y-2 pb-10">
+      <!-- Generated Position Cards -->
+    </div>
+
+  </main>
+
+  <!-- RESET CONFIRMATION MODAL -->
+  <div id="resetModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-ba-card border border-ba-cardBorder rounded-2xl p-5 max-w-xs w-full space-y-4 shadow-2xl text-center">
+      <div class="w-12 h-12 rounded-full bg-red-950/80 border border-red-700/80 text-red-300 flex items-center justify-center text-xl mx-auto">
+        ↺
+      </div>
+      <div>
+        <h3 class="text-base font-bold text-white">Reset All Positions?</h3>
+        <p class="text-xs text-slate-300 mt-1">This will uncheck all crossed-off positions for this flight.</p>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <button onclick="closeResetModal()" class="py-2.5 rounded-xl bg-slate-800 text-slate-200 text-xs font-semibold active:bg-slate-700">Cancel</button>
+        <button onclick="executeReset()" class="py-2.5 rounded-xl bg-red-600 text-white text-xs font-bold active:bg-red-700 shadow-md">Reset Now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PWA / ADD TO HOME SCREEN MODAL FOR IPHONE -->
+  <div id="installModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-ba-card border border-ba-cardBorder rounded-2xl p-5 max-w-sm w-full space-y-4 shadow-2xl text-left">
+      <div class="flex items-center justify-between border-b border-ba-cardBorder pb-3">
+        <div class="flex items-center space-x-2">
+          <div class="w-8 h-8 rounded-lg bg-ba-blue border border-ba-sky/50 text-ba-sky flex items-center justify-center font-bold text-sm shadow">
+            ✈️
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-white">Add to Home Screen</h3>
+            <p class="text-[11px] text-slate-300">Run full-screen like a native iPhone app</p>
+          </div>
+        </div>
+        <button onclick="closeInstallModal()" class="text-slate-400 hover:text-white text-lg p-1">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs text-slate-200">
+        <div class="flex items-start gap-2.5">
+          <div class="w-6 h-6 rounded-full bg-ba-blue border border-ba-sky/40 text-ba-sky font-bold flex items-center justify-center shrink-0 text-xs">1</div>
+          <p class="leading-relaxed">In Safari, tap the <strong class="text-white">Share</strong> button <span class="inline-block px-1.5 py-0.5 rounded bg-ba-deepNavy border border-ba-cardBorder text-ba-sky">⎋</span> at the bottom of your screen.</p>
+        </div>
+        <div class="flex items-start gap-2.5">
+          <div class="w-6 h-6 rounded-full bg-ba-blue border border-ba-sky/40 text-ba-sky font-bold flex items-center justify-center shrink-0 text-xs">2</div>
+          <p class="leading-relaxed">Scroll down the share sheet and tap <strong class="text-white">Add to Home Screen</strong> <span class="inline-block px-1.5 py-0.5 rounded bg-ba-deepNavy border border-ba-cardBorder text-white font-bold">⊞</span>.</p>
+        </div>
+        <div class="flex items-start gap-2.5">
+          <div class="w-6 h-6 rounded-full bg-ba-blue border border-ba-sky/40 text-ba-sky font-bold flex items-center justify-center shrink-0 text-xs">3</div>
+          <p class="leading-relaxed">Tap <strong class="text-white">Add</strong> in the top-right corner. It will install on your home screen with zero URL bar.</p>
+        </div>
+      </div>
+
+      <button onclick="closeInstallModal()" class="w-full py-2.5 rounded-xl bg-ba-blue border border-ba-sky text-white text-xs font-bold active:bg-blue-800 shadow">
+        Got it!
+      </button>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT APPLICATION CODE -->
+  <script>
+    // --- OFFICIAL BRITISH AIRWAYS FLEET SPECIFICATIONS (VERIFIED) ---
+    const FLEETS = {
+      '78E': {
+        name: 'Boeing 787-8',
+        config: 'CW 31 / WTP 37 / WT 136',
+        compliments: [
+          { label: 'Full 8', count: 8 },
+          { label: '9 Crew', count: 9 }
+        ],
+        defaultCompliment: 8,
+        positions: [
+          { id: 1,  title: 'Inflight Manager', cabin: 'Club World', door: '1L', rest: 2, isGO: false, duties: ['Boarding', 'PA'] },
+          { id: 2,  title: 'Club World', cabin: 'Club World', door: '2L', rest: 1, isGO: false, duties: ['GCC 1'] },
+          { id: 3,  title: 'World Traveller', cabin: 'WTP / WT', door: '3L', rest: 2, isGO: false, duties: ['GCC 2', 'Boarding', 'IFR'] },
+          { id: 4,  title: 'Inflight Lead', cabin: 'WTP / WT', door: '4L', rest: 1, isGO: false, duties: [] },
+          { id: 5,  title: 'Club World Galley', cabin: 'Club World', door: '1R', rest: 2, isGO: true, duties: ['Flight Crew', 'Boarding'] },
+          { id: 6,  title: 'Club World', cabin: 'Club World', door: '2R', rest: 1, isGO: false, duties: ['GCC 4', 'WTP/WT Meal Delivery'] },
+          { id: 7,  title: 'World Traveller', cabin: 'WTP / WT', door: '3R', rest: 1, isGO: false, duties: ['GCC 3', 'Flying Start'] },
+          { id: 8,  title: 'World Traveller Galley', cabin: 'WTP / WT', door: '4R', rest: 2, isGO: true, duties: ['PA'] },
+          { id: 9,  title: 'World Traveller', cabin: 'WTP / WT', door: '1L', rest: 2, isGO: false, duties: [], reqCrew: 9 }
+        ]
+      },
+      '789': {
+        name: 'Boeing 787-9',
+        config: 'F 8 / CW 42 / WTP 39 / WT 127',
+        compliments: [
+          { label: 'Full 10', count: 10 },
+          { label: '11 Crew', count: 11 }
+        ],
+        defaultCompliment: 10,
+        positions: [
+          { id: 1,  title: 'Inflight Manager', cabin: 'Club World', door: '1L', rest: 2, isGO: false, duties: ['Boarding', 'PA'] },
+          { id: 2,  title: 'Club World', cabin: 'Club World', door: '2L', rest: 1, isGO: false, duties: ['GCC 1'] },
+          { id: 3,  title: 'World Traveller', cabin: 'WTP / WT', door: '3L', rest: 2, isGO: false, duties: ['GCC 2', 'Boarding', 'IFR'] },
+          { id: 4,  title: 'Inflight Lead', cabin: 'WTP / WT', door: '4L', rest: 1, isGO: false, duties: [] },
+          { id: 5,  title: 'Club World Galley', cabin: 'Club World', door: '2R', rest: 2, isGO: true, duties: [] },
+          { id: 6,  title: 'Club World', cabin: 'Club World', door: '2R', rest: 1, isGO: false, duties: ['GCC 4'] },
+          { id: 7,  title: 'World Traveller', cabin: 'WTP / WT', door: '3R', rest: 1, isGO: false, duties: ['GCC 3', 'Flying Start'] },
+          { id: 8,  title: 'World Traveller Galley', cabin: 'WTP / WT', door: '4R', rest: 2, isGO: true, duties: ['PA'] },
+          { id: 9,  title: 'First Galley', cabin: 'First', door: '1R', rest: 1, isGO: true, duties: ['Flight Crew', 'Boarding'] },
+          { id: 10, title: 'First', cabin: 'First', door: '1L', rest: 2, isGO: false, duties: [] },
+          { id: 11, title: 'World Traveller', cabin: 'WTP / WT', door: '4R', rest: 2, isGO: false, duties: ['GCC 5'], reqCrew: 11 }
+        ]
+      },
+      '78N': {
+        name: 'Boeing 787-9',
+        config: 'F 8 / CW 38 / WTP 39 / WT 130',
+        compliments: [
+          { label: 'Full 10', count: 10 },
+          { label: '11 Crew', count: 11 }
+        ],
+        defaultCompliment: 10,
+        positions: [
+          { id: 1,  title: 'Inflight Manager', cabin: 'Club World', door: '1L', rest: 2, isGO: false, duties: ['Boarding', 'PA'] },
+          { id: 2,  title: 'Club World', cabin: 'Club World', door: '2L', rest: 1, isGO: false, duties: ['GCC 1'] },
+          { id: 3,  title: 'World Traveller', cabin: 'WTP / WT', door: '3L', rest: 2, isGO: false, duties: ['GCC 2', 'Boarding', 'IFR'] },
+          { id: 4,  title: 'Inflight Lead', cabin: 'WTP / WT', door: '4L', rest: 1, isGO: false, duties: [] },
+          { id: 5,  title: 'Club World Galley', cabin: 'Club World', door: '2R', rest: 2, isGO: true, duties: [] },
+          { id: 6,  title: 'Club World', cabin: 'Club World', door: '2R', rest: 1, isGO: false, duties: ['GCC 4'] },
+          { id: 7,  title: 'World Traveller', cabin: 'WTP / WT', door: '3R', rest: 1, isGO: false, duties: ['GCC 3', 'Flying Start'] },
+          { id: 8,  title: 'World Traveller Galley', cabin: 'WTP / WT', door: '4R', rest: 2, isGO: true, duties: ['PA'] },
+          { id: 9,  title: 'First Galley', cabin: 'First', door: '1R', rest: 1, isGO: true, duties: ['Flight Crew', 'Boarding'] },
+          { id: 10, title: 'First', cabin: 'First', door: '1L', rest: 2, isGO: false, duties: [] },
+          { id: 11, title: 'World Traveller', cabin: 'WTP / WT', door: '4R', rest: 2, isGO: false, duties: ['GCC 5'], reqCrew: 11 }
+        ]
+      },
+      '781': {
+        name: 'Boeing 787-10',
+        config: 'F 8 / CW 48 / WTP 35 / WT 165',
+        compliments: [
+          { label: 'Full 11', count: 11 },
+          { label: '12 Crew', count: 12 }
+        ],
+        defaultCompliment: 11,
+        positions: [
+          { id: 1,  title: 'Inflight Manager', cabin: 'Club World', door: '1L', rest: 2, isGO: false, duties: ['Boarding', 'PA'] },
+          { id: 2,  title: 'Club World', cabin: 'Club World', door: '2L', rest: 1, isGO: false, duties: ['GCC 1'] },
+          { id: 3,  title: 'World Traveller', cabin: 'WTP / WT', door: '3L', rest: 2, isGO: false, duties: ['GCC 2', 'Boarding', 'IFR'] },
+          { id: 4,  title: 'Inflight Lead', cabin: 'WTP / WT', door: '4L', rest: 1, isGO: false, duties: [] },
+          { id: 5,  title: 'Club World Galley', cabin: 'Club World', door: '2R', rest: 2, isGO: true, duties: [] },
+          { id: 6,  title: 'Club World', cabin: 'Club World', door: '2R', rest: 1, isGO: false, duties: ['GCC 4'] },
+          { id: 7,  title: 'World Traveller', cabin: 'WTP / WT', door: '3R', rest: 1, isGO: false, duties: ['GCC 3', 'Flying Start'] },
+          { id: 8,  title: 'World Traveller Galley', cabin: 'WTP / WT', door: '4R', rest: 2, isGO: true, duties: ['PA'] },
+          { id: 9,  title: 'First Galley', cabin: 'First', door: '1R', rest: 1, isGO: true, duties: ['Flight Crew', 'Boarding'] },
+          { id: 10, title: 'First', cabin: 'First', door: '1L', rest: 2, isGO: false, duties: [] },
+          { id: 11, title: 'Club World', cabin: 'Club World', door: '2L', rest: 2, isGO: false, duties: [] },
+          { id: 12, title: 'World Traveller', cabin: 'WTP / WT', door: '48D / OFCR', side: 'R', rest: 1, isGO: false, duties: ['OFCR if Full', 'Turb: Flight Deck'], reqCrew: 12 }
+        ]
+      },
+      '78Z': {
+        name: 'Boeing 787-10',
+        config: 'F 8 / CW 48 / WTP 35 / WT 160',
+        compliments: [
+          { label: 'Full 11', count: 11 },
+          { label: '12 Crew', count: 12 }
+        ],
+        defaultCompliment: 11,
+        positions: [
+          { id: 1,  title: 'Inflight Manager', cabin: 'Club World', door: '1L', rest: 2, isGO: false, duties: ['Boarding', 'PA'] },
+          { id: 2,  title: 'Club World', cabin: 'Club World', door: '2L', rest: 1, isGO: false, duties: ['GCC 1'] },
+          { id: 3,  title: 'World Traveller', cabin: 'WTP / WT', door: '3L', rest: 2, isGO: false, duties: ['GCC 2', 'Boarding', 'IFR'] },
+          { id: 4,  title: 'Inflight Lead', cabin: 'WTP / WT', door: '4L', rest: 1, isGO: false, duties: [] },
+          { id: 5,  title: 'Club World Galley', cabin: 'Club World', door: '2R', rest: 2, isGO: true, duties: [] },
+          { id: 6,  title: 'Club World', cabin: 'Club World', door: '2R', rest: 1, isGO: false, duties: ['GCC 4'] },
+          { id: 7,  title: 'World Traveller', cabin: 'WTP / WT', door: '3R', rest: 1, isGO: false, duties: ['GCC 3', 'Flying Start'] },
+          { id: 8,  title: 'World Traveller Galley', cabin: 'WTP / WT', door: '4R', rest: 2, isGO: true, duties: ['PA'] },
+          { id: 9,  title: 'First Galley', cabin: 'First', door: '1R', rest: 1, isGO: true, duties: ['Flight Crew', 'Boarding'] },
+          { id: 10, title: 'First', cabin: 'First', door: '1L', rest: 2, isGO: false, duties: [] },
+          { id: 11, title: 'Club World', cabin: 'Club World', door: '2L', rest: 2, isGO: false, duties: [] },
+          { id: 12, title: 'World Traveller', cabin: 'WTP / WT', door: '48D / OFCR', side: 'R', rest: 1, isGO: false, duties: ['OFCR if Full', 'Turb: Flight Deck'], reqCrew: 12 }
+        ]
+      },
+      '77M': {
+        name: 'Boeing 777-200ER',
+        config: 'F 8 / CW 49 / WTP 40 / WT 138',
+        compliments: [
+          { label: 'Full 11', count: 11 },
+          { label: '12 Crew', count: 12 }
+        ],
+        defaultCompliment: 11,
+        positions: [
+          { id: 1,  title: 'Inflight Manager', cabin: 'Club World', door: '1L', rest: 2, isGO: false, duties: ['Boarding', 'PA'] },
+          { id: 2,  title: 'Club World Galley', cabin: 'Club World', door: '2L', rest: 2, isGO: true, duties: [] },
+          { id: 3,  title: 'World Traveller', cabin: 'WTP / WT', door: '3L', rest: 2, isGO: false, duties: ['GCC 2', 'Boarding', 'IFR'] },
+          { id: 4,  title: 'Inflight Lead', cabin: 'WTP / WT', door: '4L', rest: 1, isGO: false, duties: [] },
+          { id: 5,  title: 'First Galley', cabin: 'First', door: '1R', rest: 1, isGO: true, duties: ['Flight Crew', 'Boarding'] },
+          { id: 6,  title: 'Club World', cabin: 'Club World', door: '2R', rest: 1, isGO: false, duties: ['GCC 1'] },
+          { id: 7,  title: 'World Traveller', cabin: 'WTP / WT', door: '3R', rest: 1, isGO: false, duties: ['GCC 3', 'Flying Start'] },
+          { id: 8,  title: 'World Traveller Galley', cabin: 'WTP / WT', door: '4R', rest: 2, isGO: true, duties: ['PA'] },
+          { id: 9,  title: 'First', cabin: 'First', door: '1L', rest: 2, isGO: false, duties: [] },
+          { id: 10, title: 'Club World', cabin: 'Club World', door: '2L', rest: 2, isGO: false, duties: ['GCC 4'] },
+          { id: 11, title: 'Club World', cabin: 'Club World', door: '1R', rest: 1, isGO: false, duties: [] },
+          { id: 12, title: 'World Traveller', cabin: 'WTP / WT', door: '4R', rest: 1, isGO: false, duties: [], reqCrew: 12 }
+        ]
+      },
+      '77L': {
+        name: 'Boeing 777-200ER',
+        config: 'CW 48 / WTP 40 / WT 184',
+        compliments: [
+          { label: 'Full 10', count: 10 },
+          { label: '11 Crew', count: 11 }
+        ],
+        defaultCompliment: 10,
+        positions: [
+          { id: 1,  title: 'Inflight Manager', cabin: 'Club World', door: '1L', rest: 2, isGO: false, duties: ['Boarding', 'PA'] },
+          { id: 2,  title: 'Club World', cabin: 'Club World', door: '2L', rest: 1, isGO: false, duties: ['GCC 1'] },
+          { id: 3,  title: 'World Traveller', cabin: 'WTP / WT', door: '3L', rest: 2, isGO: false, duties: ['GCC 2', 'Boarding', 'IFR'] },
+          { id: 4,  title: 'Inflight Lead', cabin: 'WTP / WT', door: '4L', rest: 1, isGO: false, duties: [] },
+          { id: 5,  title: 'Club World Galley', cabin: 'Club World', door: '1R', rest: 2, isGO: true, duties: ['Flight Crew', 'Boarding'] },
+          { id: 6,  title: 'Club World', cabin: 'Club World', door: '2R', rest: 1, isGO: false, duties: [] },
+          { id: 7,  title: 'World Traveller', cabin: 'WTP / WT', door: '3R', rest: 1, isGO: false, duties: ['GCC 3', 'Flying Start'] },
+          { id: 8,  title: 'World Traveller Galley', cabin: 'WTP / WT', door: '4R', rest: 2, isGO: true, duties: ['PA'] },
+          { id: 9,  title: 'Club World', cabin: 'Club World', door: '1L', rest: 2, isGO: false, duties: ['GCC 4'] },
+          { id: 10, title: 'World Traveller Plus', cabin: 'WTP / WT', door: '2R', rest: 1, isGO: false, duties: [] },
+          { id: 11, title: 'World Traveller', cabin: 'WTP / WT', door: '1R', rest: 2, isGO: false, duties: [], reqCrew: 11 }
+        ]
+      },
+      '77H': {
+        name: 'Boeing 777-300ER',
+        config: 'F 8 / CW 76 / WTP 40 / WT 130',
+        compliments: [
+          { label: 'Full 13', count: 13 },
+          { label: '14 Crew', count: 14 }
+        ],
+        defaultCompliment: 13,
+        positions: [
+          { id: 1,  title: 'Inflight Manager', cabin: 'Club World', door: '1L', rest: 2, isGO: false, duties: ['Boarding', 'PA'] },
+          { id: 2,  title: 'First', cabin: 'First', door: '2L', rest: 2, isGO: false, duties: [] },
+          { id: 3,  title: 'Club World', cabin: 'Club World', door: '2L', rest: 1, isGO: false, duties: [] },
+          { id: 4,  title: 'Club World', cabin: 'Club World', door: '3L', rest: 2, isGO: false, duties: ['GCC 1'] },
+          { id: 5,  title: 'World Traveller', cabin: 'WTP / WT', door: '4L', rest: 2, isGO: false, duties: ['GCC 3', 'Boarding', 'IFR'] },
+          { id: 6,  title: 'Inflight Lead', cabin: 'WTP / WT', door: '5L', rest: 1, isGO: false, duties: [] },
+          { id: 7,  title: 'First Galley', cabin: 'First', door: '1R', rest: 1, isGO: true, duties: ['Flight Crew', 'Boarding'] },
+          { id: 8,  title: 'Club World Galley', cabin: 'Club World', door: '2R', rest: 2, isGO: true, duties: [] },
+          { id: 9,  title: 'Club World', cabin: 'Club World', door: '2R', rest: 1, isGO: false, duties: ['GCC 4'] },
+          { id: 10, title: 'Club World Galley Assist', cabin: 'Club World', door: '3R', rest: 2, isGO: true, duties: [] },
+          { id: 11, title: 'World Traveller', cabin: 'WTP / WT', door: '4R', rest: 1, isGO: false, duties: ['GCC 2', 'Flying Start'] },
+          { id: 12, title: 'World Traveller Galley', cabin: 'WTP / WT', door: '5R', rest: 2, isGO: true, duties: ['PA'] },
+          { id: 13, title: 'Club World', cabin: 'Club World', door: '1L', rest: 1, isGO: false, duties: [] },
+          { id: 14, title: 'World Traveller', cabin: 'WTP / WT', door: '1R', rest: 1, isGO: false, duties: [], reqCrew: 14 }
+        ]
+      },
+      '351': {
+        name: 'Airbus A350-1000',
+        config: 'CW 56 / WTP 56 / WT 219',
+        compliments: [
+          { label: 'Full 12', count: 12 }
+        ],
+        defaultCompliment: 12,
+        positions: [
+          { id: 1,  title: 'Inflight Manager', cabin: 'Club World', door: '1L', rest: 2, isGO: false, duties: ['Boarding', 'PA'] },
+          { id: 2,  title: 'Club World', cabin: 'Club World', door: '2L', rest: 1, isGO: false, duties: ['GCC 1'] },
+          { id: 3,  title: 'World Traveller', cabin: 'WTP / WT', door: '3L', rest: 2, isGO: false, duties: ['GCC 2', 'Boarding', 'IFR'] },
+          { id: 4,  title: 'Inflight Lead', cabin: 'WTP / WT', door: '4L', rest: 1, isGO: false, duties: [] },
+          { id: 5,  title: 'Club World Galley', cabin: 'Club World', door: '1R', rest: 2, isGO: true, duties: ['Flight Crew', 'Boarding'] },
+          { id: 6,  title: 'Club World', cabin: 'Club World', door: '2R', rest: 1, isGO: false, duties: [] },
+          { id: 7,  title: 'World Traveller', cabin: 'WTP / WT', door: '3R', rest: 1, isGO: false, duties: ['GCC 3', 'Flying Start'] },
+          { id: 8,  title: 'World Traveller Galley', cabin: 'WTP / WT', door: '4R', rest: 2, isGO: true, duties: ['PA'] },
+          { id: 9,  title: 'World Traveller Plus', cabin: 'WTP / WT', door: '2R', rest: 1, isGO: false, duties: [] },
+          { id: 10, title: 'Club World', cabin: 'Club World', door: '1L', rest: 2, isGO: false, duties: ['GCC 4'] },
+          { id: 11, title: 'World Traveller', cabin: 'WTP / WT', door: '4L', rest: 1, isGO: false, duties: ['WTP PTO'] },
+          { id: 12, title: 'World Traveller', cabin: 'WTP / WT', door: '4R', rest: 2, isGO: false, duties: ['CW Pre-Dep'] }
+        ]
+      },
+      '38A': {
+        name: 'Airbus A380',
+        config: 'F 14 / CW 97 / WTP 55 / WT 303',
+        compliments: [
+          { label: 'Full 22', count: 22 },
+          { label: '23 Crew', count: 23 }
+        ],
+        defaultCompliment: 22,
+        positions: [
+          // MAIN DECK (5 Doors: M1 to M5) - 13 Positions
+          { id: 1,  title: 'Inflight Manager', cabin: 'Club World', door: 'M1L', side: 'L', deck: 'Main', rest: 2, isGO: false, duties: ['Boarding', 'PA'] },
+          { id: 2,  title: 'Club World Galley', cabin: 'Club World', door: 'M2L', side: 'L', deck: 'Main', rest: 2, isGO: true, duties: [] },
+          { id: 3,  title: 'Club World', cabin: 'Club World', door: 'M3L', side: 'L', deck: 'Main', rest: 1, isGO: false, duties: ['GCC 4'] },
+          { id: 4,  title: 'Inflight Lead', cabin: 'WTP / WT', door: 'M4L', side: 'L', deck: 'Main', rest: 2, isGO: false, duties: [] },
+          { id: 5,  title: 'World Traveller', cabin: 'WTP / WT', door: 'M5L', side: 'L', deck: 'Main', rest: 1, isGO: false, duties: ['GCC 2', 'Boarding', 'Flying Start'] },
+          { id: 6,  title: 'First', cabin: 'First', door: 'M1R', side: 'R', deck: 'Main', rest: 1, isGO: false, duties: ['GCC 3', 'Break Assist'] },
+          { id: 7,  title: 'First Galley', cabin: 'First', door: 'M1R', side: 'R', deck: 'Main', rest: 1, isGO: true, duties: ['Flight Crew', 'Boarding'] },
+          { id: 8,  title: 'Club World', cabin: 'Club World', door: 'M3R', side: 'R', deck: 'Main', rest: 1, isGO: false, duties: [] },
+          { id: 9,  title: 'World Traveller Galley', cabin: 'WTP / WT', door: 'M4R', side: 'R', deck: 'Main', rest: 2, isGO: true, duties: [] },
+          { id: 10, title: 'World Traveller', cabin: 'WTP / WT', door: 'M5R', side: 'R', deck: 'Main', rest: 2, isGO: false, duties: ['PA', 'IFR'] },
+          { id: 19, title: 'First', cabin: 'First', door: 'M1L', side: 'L', deck: 'Main', rest: 2, isGO: false, duties: [] },
+          { id: 20, title: 'World Traveller', cabin: 'WTP / WT', door: 'M3L', side: 'L', deck: 'Main', rest: 1, isGO: false, duties: ['Boarding M1L'] },
+          { id: 21, title: 'Club World', cabin: 'Club World', door: 'M3R', side: 'R', deck: 'Main', rest: 2, isGO: false, duties: [] },
+
+          // UPPER DECK (3 Doors: U1, U2, U3) - 9 Positions + 1 Augmented
+          { id: 11, title: 'Club World', cabin: 'Club World', door: 'UD Fwd', side: 'L', deck: 'Upper', rest: 2, isGO: false, duties: ['GCC 1'] },
+          { id: 12, title: 'Inflight Lead', cabin: 'Club World', door: 'U1L', side: 'L', deck: 'Upper', rest: 1, isGO: false, duties: ['Boarding'] },
+          { id: 22, title: 'Club World', cabin: 'Club World', door: 'U1L', side: 'L', deck: 'Upper', rest: 1, isGO: false, duties: [] },
+          { id: 13, title: 'World Traveller', cabin: 'WTP / WT', door: 'U2L', side: 'L', deck: 'Upper', rest: 1, isGO: false, duties: ['GCC 5', 'Boarding'] },
+          { id: 14, title: 'World Traveller Galley', cabin: 'WTP / WT', door: 'U3L', side: 'L', deck: 'Upper', rest: 2, isGO: true, duties: [] },
+          { id: 15, title: 'Club World', cabin: 'Club World', door: 'UD Fwd', side: 'R', deck: 'Upper', rest: 1, isGO: false, duties: ['Flying Start'] },
+          { id: 16, title: 'Club World Galley', cabin: 'Club World', door: 'U1R', side: 'R', deck: 'Upper', rest: 2, isGO: true, duties: [] },
+          { id: 17, title: 'World Traveller', cabin: 'WTP / WT', door: 'U2R', side: 'R', deck: 'Upper', rest: 2, isGO: false, duties: ['IFR'] },
+          { id: 18, title: 'World Traveller', cabin: 'WTP / WT', door: 'U3R', side: 'R', deck: 'Upper', rest: 1, isGO: false, duties: [] },
+          { id: 23, title: 'World Traveller', cabin: 'WTP / WT', door: 'U1R', side: 'R', deck: 'Upper', rest: 1, isGO: false, duties: [], reqCrew: 23 }
+        ]
+      }
+    };
+
+    // --- APPLICATION STATE ---
+    const state = {
+      fleetId: '77M',
+      activeCompliment: 11,
+      filter: 'all',          // 'all' | 'open' | 'rest1' | 'rest2' | 'go'
+      viewMode: 'aircraft',   // 'aircraft' (Left/Right) | 'grid' (ordered numerical)
+      activeDeck: 'all',      // 'all' | 'Main' | 'Upper' (A380 only)
+      myPositionMap: {},      // key: `${fleetId}` -> posId
+      takenMap: {}            // key: `${fleetId}-${positionId}` -> true
+    };
+
+    // --- LOCAL STORAGE PERSISTENCE ---
+    function loadSavedState() {
+      try {
+        const saved = localStorage.getItem('ba_pos_state');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed.fleetId && FLEETS[parsed.fleetId]) state.fleetId = parsed.fleetId;
+          
+          // Verify valid compliment
+          const availableCompliments = FLEETS[state.fleetId].compliments.map(c => c.count);
+          if (parsed.activeCompliment && availableCompliments.includes(parsed.activeCompliment)) {
+            state.activeCompliment = parsed.activeCompliment;
+          } else {
+            state.activeCompliment = FLEETS[state.fleetId].defaultCompliment;
+          }
+
+          if (parsed.viewMode === 'aircraft' || parsed.viewMode === 'grid') state.viewMode = parsed.viewMode;
+          if (parsed.takenMap) state.takenMap = parsed.takenMap;
+          if (parsed.myPositionMap) state.myPositionMap = parsed.myPositionMap;
+        }
+      } catch (e) {
+        console.warn('LocalStorage load error', e);
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem('ba_pos_state', JSON.stringify({
+          fleetId: state.fleetId,
+          activeCompliment: state.activeCompliment,
+          viewMode: state.viewMode,
+          takenMap: state.takenMap,
+          myPositionMap: state.myPositionMap
+        }));
+      } catch (e) {
+        console.warn('LocalStorage save error', e);
+      }
+    }
+
+    // --- SCREEN WAKE LOCK & HAPTICS ---
+    let wakeLock = null;
+
+    async function requestWakeLock() {
+      try {
+        if ('wakeLock' in navigator && !wakeLock) {
+          wakeLock = await navigator.wakeLock.request('screen');
+          wakeLock.addEventListener('release', () => { wakeLock = null; });
+        }
+      } catch (err) {}
+    }
+
+    document.addEventListener('visibilitychange', async () => {
+      if (document.visibilityState === 'visible') {
+        await requestWakeLock();
+      }
+    });
+
+    function triggerHaptic() {
+      requestWakeLock();
+      if ('vibrate' in navigator) {
+        try { navigator.vibrate(14); } catch (e) {}
+      }
+    }
+
+    // --- INTERACTION HANDLERS ---
+    function togglePositionTaken(posId) {
+      const key = `${state.fleetId}-${posId}`;
+      const nowTaken = !state.takenMap[key];
+      if (nowTaken) {
+        state.takenMap[key] = true;
+      } else {
+        delete state.takenMap[key];
+        if (state.myPositionMap[state.fleetId] === posId) {
+          delete state.myPositionMap[state.fleetId];
+        }
+      }
+      triggerHaptic();
+      saveState();
+      renderAll();
+    }
+
+    function toggleMyPosition(posId, event) {
+      if (event) event.stopPropagation();
+      if (state.myPositionMap[state.fleetId] === posId) {
+        delete state.myPositionMap[state.fleetId];
+      } else {
+        state.myPositionMap[state.fleetId] = posId;
+        state.takenMap[`${state.fleetId}-${posId}`] = true;
+      }
+      triggerHaptic();
+      saveState();
+      renderAll();
+    }
+
+    function setFleet(fleetCode) {
+      if (!FLEETS[fleetCode]) return;
+      state.fleetId = fleetCode;
+      state.activeCompliment = FLEETS[fleetCode].defaultCompliment;
+      state.activeDeck = 'all';
+      saveState();
+      renderAll();
+    }
+
+    function setCompliment(count) {
+      state.activeCompliment = count;
+      saveState();
+      renderAll();
+    }
+
+    function setFilter(flt) {
+      state.filter = flt;
+      renderAll();
+    }
+
+    function setViewMode(mode) {
+      state.viewMode = mode;
+      saveState();
+      renderAll();
+    }
+
+    function setDeckFilter(deck) {
+      state.activeDeck = deck;
+      renderAll();
+    }
+
+    // --- PWA HELPER & BESPOKE APP ICON GENERATION ---
+    function setupPwaAssets() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 192;
+      canvas.height = 192;
+      const ctx = canvas.getContext('2d');
+
+      // Deep aviation navy background
+      ctx.fillStyle = '#071630';
+      ctx.fillRect(0, 0, 192, 192);
+
+      // Radial subtle glow
+      const grad = ctx.createRadialGradient(96, 96, 20, 96, 96, 96);
+      grad.addColorStop(0, '#102d60');
+      grad.addColorStop(1, '#040d1a');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 192, 192);
+
+      // Gold outer ring
+      ctx.strokeStyle = '#F59E0B';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.arc(96, 96, 78, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Stylized modern aircraft glyph
+      ctx.fillStyle = '#38bdf8';
+      ctx.font = 'bold 58px -apple-system, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('✈', 96, 85);
+
+      // Sleek brand title
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '900 16px -apple-system, sans-serif';
+      ctx.fillText('POSITIONS', 96, 134);
+
+      const iconDataUrl = canvas.toDataURL('image/png');
+      document.getElementById('appleTouchIcon').setAttribute('href', iconDataUrl);
+
+      // 2. Build embedded Web App Manifest
+      const manifest = {
+        name: "Cabin Crew Positions",
+        short_name: "Positions",
+        description: "Worldwide Fleet Station and Rest Allocation Manager",
+        start_url: window.location.href,
+        display: "standalone",
+        background_color: "#030a16",
+        theme_color: "#071630",
+        orientation: "portrait",
+        icons: [
+          {
+            src: iconDataUrl,
+            sizes: "192x192",
+            type: "image/png",
+            purpose: "any maskable"
+          }
+        ]
+      };
+      const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+      document.getElementById('manifestLink').setAttribute('href', URL.createObjectURL(manifestBlob));
+
+      // 3. Standalone check
+      const isStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+      const installBtn = document.getElementById('pwaInstallBtn');
+      if (!isStandalone && installBtn) {
+        installBtn.classList.remove('hidden');
+        installBtn.classList.add('flex');
+      }
+    }
+
+    function openInstallModal() {
+      document.getElementById('installModal').classList.remove('hidden');
+      document.getElementById('installModal').classList.add('flex');
+    }
+
+    function closeInstallModal() {
+      document.getElementById('installModal').classList.add('hidden');
+      document.getElementById('installModal').classList.remove('flex');
+    }
+
+    function confirmReset() {
+      document.getElementById('resetModal').classList.remove('hidden');
+      document.getElementById('resetModal').classList.add('flex');
+    }
+
+    function closeResetModal() {
+      document.getElementById('resetModal').classList.add('hidden');
+      document.getElementById('resetModal').classList.remove('flex');
+    }
+
+    function executeReset() {
+      const prefix = `${state.fleetId}-`;
+      Object.keys(state.takenMap).forEach(key => {
+        if (key.startsWith(prefix)) delete state.takenMap[key];
+      });
+      delete state.myPositionMap[state.fleetId];
+      closeResetModal();
+      triggerHaptic();
+      saveState();
+      renderAll();
+    }
+
+    // --- RENDERING FUNCTIONS ---
+    function renderFleetStrip() {
+      document.querySelectorAll('.fleet-btn').forEach(btn => {
+        const id = btn.id.replace('btn-', '');
+        if (id === state.fleetId) {
+          btn.className = "fleet-btn px-2.5 py-1 text-xs font-mono font-bold rounded-md bg-ba-red text-white shadow transition-colors";
+        } else {
+          btn.className = "fleet-btn px-2.5 py-1 text-xs font-mono font-bold rounded-md bg-ba-card text-slate-300 hover:text-white active:bg-slate-700 transition-colors";
+        }
+      });
+      document.getElementById('activeFleetIndicator').textContent = `Active: ${state.fleetId}`;
+    }
+
+    function renderHeaderInfo() {
+      const fleet = FLEETS[state.fleetId];
+      document.getElementById('headerFleetName').textContent = fleet.name;
+      document.getElementById('headerFleetCode').textContent = state.fleetId;
+      document.getElementById('headerFleetConfig').textContent = fleet.config;
+    }
+
+    function renderComplimentControls() {
+      const fleet = FLEETS[state.fleetId];
+      const container = document.getElementById('complimentButtonGroup');
+      container.innerHTML = '';
+
+      fleet.compliments.forEach(c => {
+        const btn = document.createElement('button');
+        const isActive = state.activeCompliment === c.count;
+        btn.textContent = c.label;
+        btn.onclick = () => setCompliment(c.count);
+        btn.className = isActive
+          ? "px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-ba-blue text-white border border-ba-sky shadow"
+          : "px-2.5 py-1 rounded-md text-xs font-mono text-slate-300 bg-ba-deepNavy border border-ba-cardBorder active:bg-slate-800 font-semibold";
+        container.appendChild(btn);
+      });
+    }
+
+    function renderFilterButtons() {
+      const filters = ['all', 'open', 'rest1', 'rest2', 'go'];
+      filters.forEach(f => {
+        const btn = document.getElementById(`flt-${f}`);
+        if (!btn) return;
+        const isActive = state.filter === f;
+        btn.className = isActive
+          ? "filter-btn px-2.5 py-1 rounded text-xs font-bold bg-ba-sky text-slate-950 shadow"
+          : "filter-btn px-2.5 py-1 rounded text-xs font-semibold text-slate-300 active:text-white";
+      });
+
+      // Layout View Buttons (Aircraft vs Grid)
+      const btnAircraft = document.getElementById('view-aircraft');
+      const btnGrid = document.getElementById('view-grid');
+      if (btnAircraft && btnGrid) {
+        btnAircraft.className = state.viewMode === 'aircraft'
+          ? "view-btn px-2 py-1 rounded text-[11px] font-bold bg-ba-blue text-white shadow border border-ba-sky/60"
+          : "view-btn px-2 py-1 rounded text-[11px] font-medium text-slate-300 active:text-white";
+        btnGrid.className = state.viewMode === 'grid'
+          ? "view-btn px-2 py-1 rounded text-[11px] font-bold bg-ba-blue text-white shadow border border-ba-sky/60"
+          : "view-btn px-2 py-1 rounded text-[11px] font-medium text-slate-300 active:text-white";
+      }
+
+      // A380 Deck controls
+      const deckContainer = document.getElementById('deckToggleContainer');
+      if (state.fleetId === '38A') {
+        deckContainer.classList.remove('hidden');
+        ['all', 'main', 'upper'].forEach(d => {
+          const btn = document.getElementById(`deck-${d}`);
+          const match = (d === 'all' && state.activeDeck === 'all') ||
+                        (d === 'main' && state.activeDeck === 'Main') ||
+                        (d === 'upper' && state.activeDeck === 'Upper');
+          btn.className = match
+            ? "deck-btn px-2.5 py-0.5 rounded text-[11px] font-bold bg-ba-blue text-white shadow"
+            : "deck-btn px-2.5 py-0.5 rounded text-[11px] font-medium text-slate-300 active:text-white";
+        });
+      } else {
+        deckContainer.classList.add('hidden');
+      }
+    }
+
+    function createPositionCardHtml(pos) {
+      const isTaken = !!state.takenMap[`${state.fleetId}-${pos.id}`];
+      const isMine = state.myPositionMap[state.fleetId] === pos.id;
+
+      // High-contrast cabin indicator classes
+      let cabinBorderClass = "border-cabin-wt";
+      let cabinColor = "text-emerald-400 font-semibold";
+      if (pos.cabin === 'First') {
+        cabinBorderClass = "border-cabin-first";
+        cabinColor = "text-amber-400 font-semibold";
+      } else if (pos.cabin === 'Club World') {
+        cabinBorderClass = "border-cabin-cw";
+        cabinColor = "text-sky-300 font-semibold";
+      }
+
+      // GCC & discrete duties badges
+      let dutiesHtml = '';
+      if (pos.duties && pos.duties.length > 0) {
+        dutiesHtml = pos.duties.map(d => {
+          const isGcc = d.startsWith('GCC');
+          const pillClass = isGcc 
+            ? "bg-purple-900/90 border-purple-500/80 text-purple-200"
+            : "bg-[#061225] border-slate-700/80 text-slate-200";
+          return `<span class="px-1.5 py-0.5 text-[9px] leading-tight font-mono font-bold rounded border ${pillClass} tracking-tight">${d}</span>`;
+        }).join(' ');
+      }
+
+      // Break pill contrast
+      const breakClass = pos.rest === 1 
+        ? "bg-amber-950/90 border-amber-500/90 text-amber-200 font-bold"
+        : "bg-indigo-950/90 border-indigo-400/90 text-indigo-200 font-bold";
+
+      return `
+        <div onclick="togglePositionTaken(${pos.id})" 
+             ondblclick="toggleMyPosition(${pos.id}, event)"
+             class="pos-card relative bg-ba-card border border-ba-cardBorder ${cabinBorderClass} rounded-xl p-2.5 flex flex-col justify-between cursor-pointer active:scale-[0.98] transition-all select-none shadow-sm ${isTaken ? 'taken' : ''} ${isMine ? 'my-pick' : ''}">
+          
+          <!-- Top Row: Position Number (Left) vs Door & Break Badge (Right) -->
+          <div class="flex items-center justify-between gap-1 mb-1.5 pb-1 border-b border-ba-cardBorder/60">
+            <!-- High-Contrast Position Number -->
+            <div class="flex items-center gap-1.5">
+              <div class="pos-badge w-8 h-8 rounded-lg bg-gradient-to-br from-[#1b437c] to-[#0c2752] text-white font-black font-mono text-base flex items-center justify-center shrink-0 border border-ba-sky/60 shadow">
+                ${pos.id}
+              </div>
+              ${isMine ? '<span class="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-400 text-slate-950 flex items-center gap-0.5 font-mono shadow-sm">⭐ MINE</span>' : ''}
+            </div>
+            
+            <!-- High-Contrast Door Station & Break Tag -->
+            <div class="flex items-center gap-1 shrink-0">
+              <span class="door-pill font-mono text-[11px] font-black text-slate-100 bg-[#061226] px-2 py-0.5 rounded-md border border-slate-600 shadow-inner tracking-tight">
+                ${pos.door}
+              </span>
+              <span class="break-tag px-1.5 py-0.5 rounded-md text-[9px] font-mono border ${breakClass}">
+                ${pos.rest === 1 ? '1st' : '2nd'}
+              </span>
+              <button onclick="toggleMyPosition(${pos.id}, event)" 
+                      class="p-1 rounded text-slate-400 active:text-amber-300 hover:text-amber-300 transition-colors" 
+                      title="Mark as My Position">
+                <span class="${isMine ? 'text-amber-400 text-sm' : 'text-slate-500 text-xs'}">★</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Middle: Position Title & Cabin Subtitle -->
+          <div class="min-w-0 my-0.5">
+            <div class="flex items-center gap-1 leading-snug">
+              <span class="pos-title font-bold text-[13px] text-white leading-snug tracking-tight">${pos.title}</span>
+              ${pos.isGO ? '<span class="text-amber-400 text-xs shrink-0" title="Galley Operator">👨‍🍳</span>' : ''}
+            </div>
+            <div class="cabin-subtitle text-[11px] ${cabinColor} mt-0.5 truncate tracking-tight">${pos.cabin}</div>
+          </div>
+
+          <!-- Bottom: Duties & Taken Checkbox -->
+          <div class="mt-2 pt-1 border-t border-ba-cardBorder/60 flex items-center justify-between gap-1">
+            <div class="flex items-center gap-1 flex-wrap overflow-hidden">
+              ${dutiesHtml || '<span class="text-[9px] text-slate-500 font-mono">-</span>'}
+            </div>
+            ${isTaken 
+              ? '<span class="text-sm text-red-400 font-black shrink-0">✕</span>' 
+              : '<span class="w-3.5 h-3.5 rounded-full border border-slate-500 bg-slate-900/80 shrink-0"></span>'}
+          </div>
+
+        </div>
+      `;
+    }
+
+    function sortCabinPositions(positions) {
+      function getDoorOrder(doorStr) {
+        if (!doorStr) return 99;
+        if (doorStr.includes('Fwd')) return 0;
+        if (doorStr.includes('1')) return 1;
+        if (doorStr.includes('2')) return 2;
+        if (doorStr.includes('3')) return 3;
+        if (doorStr.includes('4')) return 4;
+        if (doorStr.includes('5')) return 5;
+        if (doorStr.includes('48D')) return 88;
+        if (doorStr.includes('Aft')) return 90;
+        return 99;
+      }
+
+      return [...positions].sort((a, b) => {
+        const orderA = getDoorOrder(a.door);
+        const orderB = getDoorOrder(b.door);
+        if (orderA !== orderB) return orderA - orderB;
+        return a.id - b.id;
+      });
+    }
+
+    function renderPositions() {
+      const fleet = FLEETS[state.fleetId];
+      const container = document.getElementById('positionsContainer');
+      container.innerHTML = '';
+
+      // 1. Filter positions according to current active crew compliment
+      let activePositions = fleet.positions.filter(p => {
+        if (!p.reqCrew) return true;
+        return p.reqCrew <= state.activeCompliment;
+      });
+
+      // 2. Filter by Deck for A380 if selected
+      if (state.fleetId === '38A' && state.activeDeck !== 'all') {
+        activePositions = activePositions.filter(p => p.deck === state.activeDeck);
+      }
+
+      // Update integrated counters
+      const totalActive = activePositions.length;
+      const openPositions = activePositions.filter(p => !state.takenMap[`${state.fleetId}-${p.id}`]);
+      const openCount = openPositions.length;
+      const rest1Open = openPositions.filter(p => p.rest === 1).length;
+      const rest2Open = openPositions.filter(p => p.rest === 2).length;
+
+      document.getElementById('counterAll').textContent = `(${totalActive})`;
+      document.getElementById('counterOpenPill').textContent = `(${openCount})`;
+      document.getElementById('counterRest1').textContent = `(${rest1Open})`;
+      document.getElementById('counterRest2').textContent = `(${rest2Open})`;
+
+      // 3. User Filter (All, Open, 1st Break, 2nd Break, Galley)
+      let displayed = [...activePositions];
+      if (state.filter === 'open') {
+        displayed = displayed.filter(p => !state.takenMap[`${state.fleetId}-${p.id}`]);
+      } else if (state.filter === 'rest1') {
+        displayed = displayed.filter(p => p.rest === 1);
+      } else if (state.filter === 'rest2') {
+        displayed = displayed.filter(p => p.rest === 2);
+      } else if (state.filter === 'go') {
+        displayed = displayed.filter(p => p.isGO);
+      }
+
+      if (displayed.length === 0) {
+        container.innerHTML = `
+          <div class="p-8 text-center bg-ba-card/60 border border-ba-cardBorder rounded-2xl space-y-2">
+            <span class="text-2xl">✓</span>
+            <p class="text-sm font-semibold text-slate-200">No positions match this filter</p>
+            <p class="text-xs text-slate-400">Tap 'All' to see all available positions.</p>
+          </div>
+        `;
+        return;
+      }
+
+      // RENDER LOGIC BASED ON VIEW MODE
+      if (state.viewMode === 'grid') {
+        const grid = document.createElement('div');
+        grid.className = "grid grid-cols-2 gap-2";
+        grid.innerHTML = displayed.map(p => createPositionCardHtml(p)).join('');
+        container.appendChild(grid);
+      } else {
+        // AIRCRAFT DOORS LAYOUT (Aircraft Left vs Aircraft Right with Center Aisle)
+        if (state.fleetId === '38A' && state.activeDeck === 'all') {
+          // Render Main Deck followed by Upper Deck sections
+          ['Main', 'Upper'].forEach(deckName => {
+            const deckPositions = displayed.filter(p => p.deck === deckName);
+            if (deckPositions.length === 0) return;
+
+            const leftPositions = sortCabinPositions(deckPositions.filter(p => (p.side ? p.side === 'L' : p.door.endsWith('L'))));
+            const rightPositions = sortCabinPositions(deckPositions.filter(p => (p.side ? p.side === 'R' : p.door.endsWith('R'))));
+
+            const section = document.createElement('div');
+            section.className = "space-y-1.5 mb-4";
+            section.innerHTML = `
+              <div class="flex items-center justify-between border-b border-ba-cardBorder pb-1 px-1">
+                <span class="text-xs font-bold font-mono uppercase tracking-wider text-ba-sky">${deckName} Deck</span>
+                <span class="text-[10px] font-mono text-slate-300 font-semibold">${deckPositions.length} positions</span>
+              </div>
+              <div class="relative grid grid-cols-2 gap-2">
+                <div class="aisle-divider"></div>
+                <div class="space-y-2">
+                  <div class="text-[10px] font-mono uppercase text-slate-300 px-1 font-bold flex items-center justify-between">
+                    <span>Aircraft Left</span>
+                    <span class="text-[9px] text-ba-sky font-semibold">▲ FWD</span>
+                  </div>
+                  ${leftPositions.map(p => createPositionCardHtml(p)).join('')}
+                </div>
+                <div class="space-y-2">
+                  <div class="text-[10px] font-mono uppercase text-slate-300 px-1 font-bold flex items-center justify-between">
+                    <span>Aircraft Right</span>
+                    <span class="text-[9px] text-ba-sky font-semibold">▲ FWD</span>
+                  </div>
+                  ${rightPositions.map(p => createPositionCardHtml(p)).join('')}
+                </div>
+              </div>
+            `;
+            container.appendChild(section);
+          });
+        } else {
+          // Standard single deck or filtered deck with center aisle divider
+          const leftPositions = sortCabinPositions(displayed.filter(p => (p.side ? p.side === 'L' : p.door.endsWith('L'))));
+          const rightPositions = sortCabinPositions(displayed.filter(p => (p.side ? p.side === 'R' : (p.door.endsWith('R') || !p.door.endsWith('L')))));
+
+          const grid = document.createElement('div');
+          grid.className = "relative grid grid-cols-2 gap-2";
+          grid.innerHTML = `
+            <div class="aisle-divider"></div>
+
+            <!-- Left Column -->
+            <div class="space-y-2">
+              <div class="text-[10px] font-mono uppercase text-ba-sky font-bold px-1 flex items-center justify-between">
+                <span>Aircraft Left (L)</span>
+                <span class="text-[9px] text-slate-400 font-medium">▲ FWD</span>
+              </div>
+              ${leftPositions.map(p => createPositionCardHtml(p)).join('')}
+            </div>
+
+            <!-- Right Column -->
+            <div class="space-y-2">
+              <div class="text-[10px] font-mono uppercase text-ba-sky font-bold px-1 flex items-center justify-between">
+                <span>Aircraft Right (R)</span>
+                <span class="text-[9px] text-slate-400 font-medium">▲ FWD</span>
+              </div>
+              ${rightPositions.map(p => createPositionCardHtml(p)).join('')}
+            </div>
+          `;
+          container.appendChild(grid);
+        }
+      }
+    }
+
+    function renderAll() {
+      renderFleetStrip();
+      renderHeaderInfo();
+      renderComplimentControls();
+      renderFilterButtons();
+      renderPositions();
+    }
+
+    // --- INITIALIZATION ---
+    window.onload = function () {
+      loadSavedState();
+      setupPwaAssets();
+      renderAll();
+    };
+  </script>
+</body>
+</html>
