@@ -1395,9 +1395,11 @@
 
       // RENDER LOGIC BASED ON VIEW MODE
       if (state.viewMode === 'grid') {
+        // Enforce strict numerical order (1, 2, 3, 4, 5...) in Grid View
+        const sortedGrid = [...displayed].sort((a, b) => a.id - b.id);
         const grid = document.createElement('div');
         grid.className = "grid grid-cols-2 gap-2";
-        grid.innerHTML = displayed.map(p => createPositionCardHtml(p)).join('');
+        grid.innerHTML = sortedGrid.map(p => createPositionCardHtml(p)).join('');
         container.appendChild(grid);
       } else {
         // AIRCRAFT DOORS LAYOUT (Left vs Right)
