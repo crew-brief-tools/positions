@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Cabin Positions</title>
+  <title>Cabin Crew Positions</title>
   
   <!-- Apple Mobile Web App Settings for iPhone -->
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -137,48 +137,40 @@
 <body class="text-slate-100 min-h-screen flex flex-col antialiased">
 
   <!-- TOP HEADER -->
-  <header class="sticky top-0 z-30 bg-app-navy/95 backdrop-blur border-b border-app-cardBorder px-2.5 py-2 shadow-md">
-    <div class="max-w-xl mx-auto flex items-center justify-between gap-1.5">
+  <header class="sticky top-0 z-30 bg-app-navy/95 backdrop-blur border-b border-app-cardBorder px-3 py-2.5 shadow-md">
+    <div class="max-w-xl mx-auto flex items-center justify-between gap-3">
       
       <!-- Bespoke App Logo & Title -->
-      <div class="flex items-center gap-2 min-w-0 flex-1">
-        <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-700 via-[#0d2754] to-app-black border border-app-sky/40 flex items-center justify-center shadow-md relative overflow-hidden shrink-0">
-          <svg class="w-4 h-4 text-app-sky" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-700 via-[#0d2754] to-app-black border border-app-sky/40 flex items-center justify-center shadow-md relative overflow-hidden shrink-0">
+          <svg class="w-4.5 h-4.5 text-app-sky" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.3c.4-.2.6-.6.5-1.1z"/>
           </svg>
           <div class="absolute -top-1 -right-1 w-2 h-2 bg-app-gold rounded-full blur-[1px]"></div>
         </div>
 
-        <div class="min-w-0 flex-1">
-          <h1 class="text-xs font-black tracking-tight text-white flex items-center gap-1.5 truncate leading-tight">
-            <span class="tracking-wide">POSITIONS</span>
-            <span id="headerFleetCode" class="text-app-sky font-mono text-[10px] bg-app-black px-1.5 py-0.5 rounded border border-app-sky/40 font-bold shrink-0">77M</span>
+        <div class="min-w-0">
+          <h1 class="text-xs font-black tracking-wider text-white flex items-center gap-1.5 leading-tight">
+            <span>POSITIONS</span>
+            <span id="headerFleetCode" class="text-app-sky font-mono text-[11px] bg-app-black px-1.5 py-0.5 rounded border border-app-sky/40 font-bold">77M</span>
           </h1>
           <div class="text-[10px] text-slate-300 font-mono tracking-tight font-medium truncate" id="headerFleetConfig">F8 / CW49 / WTP40 / WT138</div>
         </div>
       </div>
 
-      <!-- Base Toggle, QR Share & Reset Button -->
+      <!-- Header Actions: QR Share & Quick Reset -->
       <div class="flex items-center gap-1.5 shrink-0">
-        
-        <!-- Base Toggle Pill: LHR vs LGW -->
-        <div class="flex items-center bg-app-black p-0.5 rounded-lg border border-app-cardBorder">
-          <button id="baseBtnLHR" onclick="setBase('LHR')" class="px-2 py-0.5 rounded text-[10px] font-mono font-black transition-all">LHR</button>
-          <button id="baseBtnLGW" onclick="setBase('LGW')" class="px-2 py-0.5 rounded text-[10px] font-mono font-black transition-all">LGW</button>
-        </div>
-
         <!-- Share via QR Code Button -->
-        <button onclick="openQrModal()" class="h-7 px-2 rounded-lg bg-blue-950/70 border border-blue-700/80 text-sky-200 active:bg-blue-900/80 text-xs font-semibold flex items-center justify-center gap-1 transition-colors shrink-0" title="Share via QR Code">
+        <button onclick="openQrModal()" class="h-7 px-2.5 rounded-lg bg-blue-950/80 border border-blue-600/70 text-sky-200 active:bg-blue-900 text-xs font-semibold flex items-center justify-center gap-1 transition-colors" title="Share via QR Code">
           <span>📱</span>
-          <span class="text-[10px] font-mono font-bold">QR</span>
+          <span class="text-[11px] font-mono font-bold">QR</span>
         </button>
 
         <!-- Quick Reset -->
-        <button onclick="confirmReset()" class="h-7 px-2 rounded-lg bg-red-950/70 border border-red-700/80 text-red-200 active:bg-red-900/80 text-xs font-semibold flex items-center justify-center gap-1 transition-colors shrink-0" title="Reset Positions">
+        <button onclick="confirmReset()" class="h-7 px-2.5 rounded-lg bg-red-950/80 border border-red-700/80 text-red-200 active:bg-red-900 text-xs font-semibold flex items-center justify-center gap-1 transition-colors" title="Reset Positions">
           <span class="text-xs">↺</span>
-          <span class="text-[10px]">Reset</span>
+          <span class="text-[11px] font-semibold">Reset</span>
         </button>
-
       </div>
 
     </div>
@@ -187,14 +179,24 @@
   <!-- MAIN VIEW CONTAINER -->
   <main class="flex-1 max-w-xl w-full mx-auto p-3 space-y-3">
 
-    <!-- 1. FLEET SELECTOR STRIP (Drawn dynamically based on LHR vs LGW) -->
-    <div class="space-y-1">
-      <div class="flex items-center justify-between text-[11px] text-slate-300 font-mono uppercase px-1">
-        <span id="fleetStripLabel">Heathrow Fleets (LHR)</span>
-        <span class="text-app-sky font-bold" id="activeFleetIndicator">Active: 77M</span>
+    <!-- 1. BASE SELECTOR & FLEET STRIP -->
+    <div class="space-y-1.5">
+      <!-- Upper row: Base Switcher Tabs + Active Fleet Label -->
+      <div class="flex items-center justify-between px-0.5">
+        <!-- Base Switcher Pills: LHR vs LGW -->
+        <div class="inline-flex items-center bg-app-black p-0.5 rounded-lg border border-app-cardBorder">
+          <button id="baseBtnLHR" onclick="setBase('LHR')" class="px-2.5 py-1 rounded-md text-[11px] font-mono font-black transition-all">
+            LHR <span class="text-[9px] font-sans font-normal opacity-75">Heathrow</span>
+          </button>
+          <button id="baseBtnLGW" onclick="setBase('LGW')" class="px-2.5 py-1 rounded-md text-[11px] font-mono font-black transition-all">
+            LGW <span class="text-[9px] font-sans font-normal opacity-75">Gatwick</span>
+          </button>
+        </div>
+
+        <span class="text-[11px] font-mono font-bold text-app-sky" id="activeFleetIndicator">Active: 77M</span>
       </div>
       
-      <!-- Fleets Scroll Container -->
+      <!-- Fleets Horizontal Scroll Strip -->
       <div id="fleetButtonsContainer" class="flex overflow-x-auto gap-1.5 pb-1 no-scrollbar items-center">
         <!-- Rendered by JS -->
       </div>
@@ -258,6 +260,53 @@
 
   </main>
 
+  <!-- SHARE VIA QR CODE MODAL -->
+  <div id="qrModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-app-card border border-app-cardBorder rounded-2xl p-5 max-w-sm w-full space-y-4 shadow-2xl text-left">
+      <div class="flex items-center justify-between border-b border-app-cardBorder pb-3">
+        <div class="flex items-center space-x-2">
+          <div class="w-8 h-8 rounded-lg bg-blue-800 border border-app-sky/50 text-app-sky flex items-center justify-center font-bold text-sm shadow">
+            📱
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-white">Share Briefing App</h3>
+            <p class="text-[11px] text-slate-300">Scan to install directly on iPhone</p>
+          </div>
+        </div>
+        <button onclick="closeQrModal()" class="text-slate-400 hover:text-white text-lg p-1">✕</button>
+      </div>
+
+      <!-- Live Generated QR Code Box -->
+      <div class="flex flex-col items-center justify-center p-3.5 bg-white rounded-xl shadow-inner">
+        <img id="qrCodeImage" src="" alt="Scan QR Code" class="w-48 h-48 object-contain">
+        <p class="text-[10px] text-slate-600 font-mono mt-1 font-semibold">Point iPhone camera at code</p>
+      </div>
+
+      <!-- Quick 3-Step Guidance -->
+      <div class="space-y-2 text-xs text-slate-200">
+        <div class="flex items-start gap-2">
+          <span class="w-5 h-5 rounded-full bg-blue-800 text-app-sky font-bold flex items-center justify-center shrink-0 text-[11px]">1</span>
+          <p class="leading-tight">Point camera at QR code & tap the yellow link to open in <strong class="text-white">Safari</strong>.</p>
+        </div>
+        <div class="flex items-start gap-2">
+          <span class="w-5 h-5 rounded-full bg-blue-800 text-app-sky font-bold flex items-center justify-center shrink-0 text-[11px]">2</span>
+          <p class="leading-tight">In Safari, tap <strong class="text-white">Share</strong> <span class="px-1 py-0.2 bg-app-black rounded border border-app-cardBorder text-app-sky font-mono">⎋</span> then <strong class="text-white">Add to Home Screen</strong> <span class="px-1 py-0.2 bg-app-black rounded border border-app-cardBorder font-mono">⊞</span>.</p>
+        </div>
+      </div>
+
+      <!-- Copy Link Fallback -->
+      <div class="pt-1 flex gap-2">
+        <button onclick="copyShareLink()" id="btnCopyLink" class="flex-1 py-2 rounded-xl bg-app-black border border-app-cardBorder text-slate-200 text-xs font-semibold active:bg-slate-800 flex items-center justify-center gap-1.5">
+          <span>📋</span>
+          <span id="copyLinkText">Copy Link</span>
+        </button>
+        <button onclick="closeQrModal()" class="flex-1 py-2 rounded-xl bg-blue-700 text-white text-xs font-bold active:bg-blue-800 shadow">
+          Done
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- CW IN FIRST (CWIF) GUIDANCE MODAL -->
   <div id="cwifModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4">
     <div class="bg-app-card border border-amber-500/60 rounded-2xl p-5 max-w-sm w-full space-y-4 shadow-2xl text-left">
@@ -300,51 +349,6 @@
       <div class="grid grid-cols-2 gap-2">
         <button onclick="closeResetModal()" class="py-2.5 rounded-xl bg-slate-800 text-slate-200 text-xs font-semibold active:bg-slate-700">Cancel</button>
         <button onclick="executeReset()" class="py-2.5 rounded-xl bg-red-600 text-white text-xs font-bold active:bg-red-700 shadow-md">Reset Now</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- QR CODE SHARING MODAL -->
-  <div id="qrModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-app-card border border-blue-500/60 rounded-2xl p-5 max-w-sm w-full space-y-4 shadow-2xl text-center">
-      <div class="flex items-center justify-between border-b border-app-cardBorder pb-3">
-        <div class="flex items-center space-x-2 text-left">
-          <div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-sm shadow">
-            📱
-          </div>
-          <div>
-            <h3 class="text-sm font-bold text-white">Share with Crew</h3>
-            <p class="text-[11px] text-sky-300 font-mono">Scan or Add to Home Screen</p>
-          </div>
-        </div>
-        <button onclick="closeQrModal()" class="text-slate-400 hover:text-white text-lg p-1">✕</button>
-      </div>
-
-      <!-- Scannable QR Code Container -->
-      <div class="bg-white p-3 rounded-xl mx-auto inline-block shadow-inner">
-        <img id="qrImage" class="w-44 h-44 mx-auto rounded" alt="App QR Code" />
-      </div>
-
-      <!-- Instructions for iPhone / Safari -->
-      <div class="text-left bg-app-black/60 p-3 rounded-xl border border-app-cardBorder space-y-1.5 text-xs text-slate-300">
-        <div class="flex items-center gap-2 text-white font-semibold text-[11px]">
-          <span>📲</span> <span>How Colleagues Install on iPhone:</span>
-        </div>
-        <ol class="list-decimal list-inside space-y-1 text-[11px] text-slate-300">
-          <li>Scan this code using the iPhone <strong>Camera</strong> app.</li>
-          <li>In Safari, tap <strong>Share</strong> (<span class="text-sky-300">⎋</span>).</li>
-          <li>Tap <strong>Add to Home Screen</strong> (<span class="font-bold text-white">⊞</span>).</li>
-        </ol>
-      </div>
-
-      <!-- Copy Link Button -->
-      <div class="pt-1 flex gap-2">
-        <button id="copyLinkBtn" onclick="copyAppUrl()" class="flex-1 py-2 rounded-xl bg-slate-800 border border-slate-600 text-slate-200 text-xs font-semibold active:bg-slate-700 transition-colors">
-          📋 Copy Link
-        </button>
-        <button onclick="closeQrModal()" class="flex-1 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold active:bg-blue-700 shadow">
-          Done
-        </button>
       </div>
     </div>
   </div>
@@ -575,7 +579,7 @@
         ],
         defaultCompliment: 22,
         positions: [
-          // MAIN DECK (5 Doors: M1 to M5)
+          // MAIN DECK (5 Doors: M1 to M5) - 13 Positions
           { id: 1,  title: 'Inflight Manager', cabin: 'Club World', door: 'M1L', side: 'L', deck: 'Main', rest: 2, isGO: false, duties: ['Boarding', 'PA'] },
           { id: 2,  title: 'Club World Galley', cabin: 'Club World', door: 'M2L', side: 'L', deck: 'Main', rest: 2, isGO: true, duties: [] },
           { id: 3,  title: 'Club World', cabin: 'Club World', door: 'M3L', side: 'L', deck: 'Main', rest: 1, isGO: false, duties: ['GCC 4'] },
@@ -590,7 +594,7 @@
           { id: 20, title: 'World Traveller', cabin: 'WTP / WT', door: 'M3L', side: 'L', deck: 'Main', rest: 1, isGO: false, duties: ['Boarding M1L'] },
           { id: 21, title: 'Club World', cabin: 'Club World', door: 'M3R', side: 'R', deck: 'Main', rest: 2, isGO: false, duties: [] },
 
-          // UPPER DECK (3 Doors: U1, U2, U3)
+          // UPPER DECK (3 Doors: U1, U2, U3) - 9 Positions + 1 Augmented
           { id: 11, title: 'Club World', cabin: 'Club World', door: 'UD Fwd', side: 'L', deck: 'Upper', rest: 2, isGO: false, duties: ['GCC 1'] },
           { id: 12, title: 'Inflight Lead', cabin: 'Club World', door: 'U1L', side: 'L', deck: 'Upper', rest: 1, isGO: false, duties: ['Boarding'] },
           { id: 22, title: 'Club World', cabin: 'Club World', door: 'U1L', side: 'L', deck: 'Upper', rest: 1, isGO: false, duties: [] },
@@ -733,6 +737,7 @@
             state.base = parsed.base;
           }
           if (parsed.fleetId && FLEETS[parsed.fleetId]) {
+            // Verify fleet matches current base
             if (FLEETS[parsed.fleetId].base === state.base) {
               state.fleetId = parsed.fleetId;
             } else {
@@ -742,6 +747,7 @@
             state.fleetId = state.base === 'LHR' ? '77M' : '77ST';
           }
           
+          // Verify valid compliment
           const availableCompliments = FLEETS[state.fleetId].compliments.map(c => c.count);
           if (parsed.activeCompliment && availableCompliments.includes(parsed.activeCompliment)) {
             state.activeCompliment = parsed.activeCompliment;
@@ -805,6 +811,7 @@
       state.isCWIF = false;
       state.activeDeck = 'all';
 
+      // Pick default fleet for new base
       if (state.base === 'LGW') {
         state.fleetId = '77ST';
       } else {
@@ -822,7 +829,7 @@
       state.fleetId = fleetCode;
       state.activeCompliment = FLEETS[fleetCode].defaultCompliment;
       state.activeDeck = 'all';
-      state.isCWIF = false;
+      state.isCWIF = false; // Reset CWIF when switching fleets
       saveState();
       renderAll();
     }
@@ -908,6 +915,61 @@
       }
     }
 
+    // --- SHARE VIA QR CODE MODAL ---
+    function openQrModal() {
+      const modal = document.getElementById('qrModal');
+      if (!modal) return;
+
+      const currentUrl = window.location.href.split('#')[0];
+      const qrImg = document.getElementById('qrCodeImage');
+      
+      // High-resolution scannable QR code generator API
+      qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(currentUrl)}&margin=1`;
+      
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeQrModal() {
+      const modal = document.getElementById('qrModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function copyShareLink() {
+      const currentUrl = window.location.href.split('#')[0];
+      const copyBtnText = document.getElementById('copyLinkText');
+      
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(currentUrl).then(() => {
+          if (copyBtnText) copyBtnText.textContent = "Copied! ✓";
+          setTimeout(() => { if (copyBtnText) copyBtnText.textContent = "Copy Link"; }, 2000);
+        }).catch(() => {
+          fallbackCopyText(currentUrl, copyBtnText);
+        });
+      } else {
+        fallbackCopyText(currentUrl, copyBtnText);
+      }
+    }
+
+    function fallbackCopyText(text, copyBtnText) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-9999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        if (copyBtnText) copyBtnText.textContent = "Copied! ✓";
+        setTimeout(() => { if (copyBtnText) copyBtnText.textContent = "Copy Link"; }, 2000);
+      } catch (err) {}
+      document.body.removeChild(textArea);
+    }
+
     function confirmReset() {
       document.getElementById('resetModal').classList.remove('hidden');
       document.getElementById('resetModal').classList.add('flex');
@@ -937,27 +999,32 @@
       canvas.height = 192;
       const ctx = canvas.getContext('2d');
 
+      // Deep aviation navy background
       ctx.fillStyle = '#071630';
       ctx.fillRect(0, 0, 192, 192);
 
+      // Radial glow
       const grad = ctx.createRadialGradient(96, 96, 20, 96, 96, 96);
       grad.addColorStop(0, '#102d60');
       grad.addColorStop(1, '#040d1a');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, 192, 192);
 
+      // Gold outer ring
       ctx.strokeStyle = '#f59e0b';
       ctx.lineWidth = 4;
       ctx.beginPath();
       ctx.arc(96, 96, 78, 0, Math.PI * 2);
       ctx.stroke();
 
+      // Stylized modern aircraft glyph
       ctx.fillStyle = '#38bdf8';
       ctx.font = 'bold 58px -apple-system, sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText('✈', 96, 85);
 
+      // Sleek brand title
       ctx.fillStyle = '#FFFFFF';
       ctx.font = '900 16px -apple-system, sans-serif';
       ctx.fillText('POSITIONS', 96, 134);
@@ -965,6 +1032,7 @@
       const iconDataUrl = canvas.toDataURL('image/png');
       document.getElementById('appleTouchIcon').setAttribute('href', iconDataUrl);
 
+      // Embedded Web App Manifest
       const manifest = {
         name: "Cabin Crew Positions",
         short_name: "Positions",
@@ -987,84 +1055,18 @@
       document.getElementById('manifestLink').setAttribute('href', URL.createObjectURL(manifestBlob));
     }
 
-    // --- QR CODE SHARING & CLIPBOARD ---
-    function openQrModal() {
-      const modal = document.getElementById('qrModal');
-      const qrImg = document.getElementById('qrImage');
-      if (!modal || !qrImg) return;
-
-      const appUrl = window.location.href.split('#')[0];
-      const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=4&data=${encodeURIComponent(appUrl)}`;
-      qrImg.src = qrApiUrl;
-
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-      triggerHaptic();
-    }
-
-    function closeQrModal() {
-      const modal = document.getElementById('qrModal');
-      if (modal) {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-      }
-    }
-
-    function copyAppUrl() {
-      const appUrl = window.location.href.split('#')[0];
-      const copyBtn = document.getElementById('copyLinkBtn');
-      
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(appUrl).then(() => {
-          showCopySuccess(copyBtn);
-        }).catch(() => {
-          fallbackCopy(appUrl, copyBtn);
-        });
-      } else {
-        fallbackCopy(appUrl, copyBtn);
-      }
-    }
-
-    function fallbackCopy(text, btn) {
-      const tempInput = document.createElement('input');
-      tempInput.value = text;
-      document.body.appendChild(tempInput);
-      tempInput.select();
-      try {
-        document.execCommand('copy');
-        showCopySuccess(btn);
-      } catch (err) {}
-      document.body.removeChild(tempInput);
-    }
-
-    function showCopySuccess(btn) {
-      if (!btn) return;
-      const originalText = btn.innerHTML;
-      btn.innerHTML = "✓ Copied!";
-      btn.classList.add('bg-emerald-700', 'border-emerald-500', 'text-white');
-      triggerHaptic();
-      setTimeout(() => {
-        btn.innerHTML = originalText;
-        btn.classList.remove('bg-emerald-700', 'border-emerald-500', 'text-white');
-      }, 1800);
-    }
-
     // --- RENDERING FUNCTIONS ---
     function renderBaseButtons() {
       const btnLHR = document.getElementById('baseBtnLHR');
       const btnLGW = document.getElementById('baseBtnLGW');
 
       if (state.base === 'LHR') {
-        btnLHR.className = "px-2 py-0.5 rounded text-[10px] font-mono font-black bg-blue-600 text-white shadow";
-        btnLGW.className = "px-2 py-0.5 rounded text-[10px] font-mono font-bold text-slate-400 hover:text-white";
+        btnLHR.className = "px-2.5 py-1 rounded-md text-[11px] font-mono font-black bg-blue-600 text-white shadow";
+        btnLGW.className = "px-2.5 py-1 rounded-md text-[11px] font-mono font-bold text-slate-400 hover:text-white";
       } else {
-        btnLGW.className = "px-2 py-0.5 rounded text-[10px] font-mono font-black bg-amber-500 text-slate-950 shadow";
-        btnLHR.className = "px-2 py-0.5 rounded text-[10px] font-mono font-bold text-slate-400 hover:text-white";
+        btnLGW.className = "px-2.5 py-1 rounded-md text-[11px] font-mono font-black bg-amber-500 text-slate-950 shadow";
+        btnLHR.className = "px-2.5 py-1 rounded-md text-[11px] font-mono font-bold text-slate-400 hover:text-white";
       }
-
-      document.getElementById('fleetStripLabel').textContent = state.base === 'LHR' 
-        ? 'Heathrow Fleets (LHR)' 
-        : 'Gatwick Fleets (LGW)';
     }
 
     function renderFleetStrip() {
@@ -1072,6 +1074,7 @@
       container.innerHTML = '';
 
       if (state.base === 'LHR') {
+        // LHR Groups
         const groups = [
           { label: '787', fleets: ['78E', '789', '78N', '781', '78Z'] },
           { label: '777', fleets: ['77M', '77L', '77H'] },
@@ -1096,6 +1099,7 @@
           container.appendChild(groupDiv);
         });
       } else {
+        // LGW Fleet Group (77S and 77T Combined)
         const groupDiv = document.createElement('div');
         groupDiv.className = "flex items-center bg-app-black p-0.5 rounded-lg border border-app-cardBorder gap-1 shrink-0";
         groupDiv.innerHTML = `<span class="text-[9px] font-black text-amber-400 font-mono px-1.5">LGW 777</span>`;
@@ -1142,6 +1146,7 @@
         container.appendChild(btn);
       });
 
+      // CWIF Toggle Button (only on 4-Class aircraft)
       if (CWIF_FLEETS.includes(state.fleetId)) {
         const cwifBtn = document.createElement('button');
         cwifBtn.id = "btnCWIF";
@@ -1165,6 +1170,7 @@
           : "filter-btn px-2.5 py-1 rounded text-xs font-semibold text-slate-300 active:text-white";
       });
 
+      // Layout View Buttons (Aircraft vs Grid)
       const btnAircraft = document.getElementById('view-aircraft');
       const btnGrid = document.getElementById('view-grid');
       if (btnAircraft && btnGrid) {
@@ -1176,6 +1182,7 @@
           : "view-btn px-2 py-1 rounded text-[11px] font-medium text-slate-300 active:text-white";
       }
 
+      // A380 Deck controls
       const deckContainer = document.getElementById('deckToggleContainer');
       if (state.fleetId === '38A') {
         deckContainer.classList.remove('hidden');
@@ -1197,6 +1204,7 @@
       const isTaken = !!state.takenMap[`${state.fleetId}-${pos.id}`];
       const isMine = state.myPositionMap[state.fleetId] === pos.id;
 
+      // Dynamic Title, Cabin, and Galley Operator status under CWIF
       let displayTitle = pos.title;
       let displayCabin = pos.cabin;
       let displayIsGO = pos.isGO;
@@ -1210,10 +1218,12 @@
           displayIsGO = false;
         }
 
+        // 77M and 77H: No. 10 moves to 1st break
         if ((state.fleetId === '77M' || state.fleetId === '77H') && pos.id === 10) {
           effectiveRest = 1;
         }
 
+        // Specific service duties from CCOM Delivery Standards
         if (state.fleetId === '789' || state.fleetId === '78N') {
           if (pos.id === 9) effectiveDuties.push('FWD Galley Rows 1-2');
         } else if (state.fleetId === '781' || state.fleetId === '78Z') {
@@ -1228,6 +1238,7 @@
         }
       }
 
+      // High-contrast cabin indicator classes
       let cabinBorderClass = "border-cabin-wt";
       let cabinColor = "text-emerald-400 font-semibold";
       if (displayCabin === 'First') {
@@ -1238,6 +1249,7 @@
         cabinColor = "text-sky-300 font-semibold";
       }
 
+      // GCC & discrete duties badges
       let dutiesHtml = '';
       if (effectiveDuties.length > 0) {
         dutiesHtml = effectiveDuties.map(d => {
@@ -1252,6 +1264,7 @@
         }).join(' ');
       }
 
+      // Break pill contrast
       const breakClass = effectiveRest === 1 
         ? "bg-amber-950/90 border-amber-500/90 text-amber-200 font-bold"
         : "bg-indigo-950/90 border-indigo-400/90 text-indigo-200 font-bold";
@@ -1263,6 +1276,7 @@
           
           <!-- Top Row: Position Number (Left) vs Door & Break Badge (Right) -->
           <div class="flex items-center justify-between gap-1 mb-1.5 pb-1 border-b border-app-cardBorder/60">
+            <!-- High-Contrast Position Number -->
             <div class="flex items-center gap-1.5">
               <div class="pos-badge w-8 h-8 rounded-lg bg-gradient-to-br from-[#1b437c] to-[#0c2752] text-white font-black font-mono text-base flex items-center justify-center shrink-0 border border-app-sky/60 shadow">
                 ${pos.id}
@@ -1270,6 +1284,7 @@
               ${isMine ? '<span class="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-400 text-slate-950 flex items-center gap-0.5 font-mono shadow-sm">⭐ MINE</span>' : ''}
             </div>
             
+            <!-- Dedicated Door Station & Break Tag on the right -->
             <div class="flex items-center gap-1 shrink-0">
               <span class="door-pill font-mono text-[11px] font-black text-slate-100 bg-[#061226] px-2 py-0.5 rounded-md border border-slate-600 shadow-inner tracking-tight">
                 ${pos.door}
@@ -1335,6 +1350,7 @@
       const container = document.getElementById('positionsContainer');
       container.innerHTML = '';
 
+      // 1. CWIF Banner injection if active
       if (state.isCWIF && CWIF_FLEETS.includes(state.fleetId)) {
         const spec = CWIF_SPECS[state.fleetId];
         const banner = document.createElement('div');
@@ -1354,6 +1370,7 @@
         container.appendChild(banner);
       }
 
+      // 2. Filter positions according to current active crew compliment & CWIF rules
       let activePositions = fleet.positions.filter(p => {
         if (state.isCWIF && CWIF_FLEETS.includes(state.fleetId)) {
           const droppedId = CWIF_SPECS[state.fleetId].droppedPosId;
@@ -1366,10 +1383,12 @@
         return p.reqCrew <= state.activeCompliment;
       });
 
+      // Filter by Deck for A380 if selected
       if (state.fleetId === '38A' && state.activeDeck !== 'all') {
         activePositions = activePositions.filter(p => p.deck === state.activeDeck);
       }
 
+      // Update live counter badges
       const totalActive = activePositions.length;
       const openPositions = activePositions.filter(p => !state.takenMap[`${state.fleetId}-${p.id}`]);
       const openCount = openPositions.length;
@@ -1389,6 +1408,7 @@
       document.getElementById('counterRest1').textContent = `(${rest1Open})`;
       document.getElementById('counterRest2').textContent = `(${rest2Open})`;
 
+      // 3. User Filter (All, Open, 1st Break, 2nd Break, Galley)
       let displayed = [...activePositions];
       if (state.filter === 'open') {
         displayed = displayed.filter(p => !state.takenMap[`${state.fleetId}-${p.id}`]);
@@ -1419,13 +1439,16 @@
         return;
       }
 
+      // RENDER LOGIC BASED ON VIEW MODE
       if (state.viewMode === 'grid') {
-        const sortedNumerically = [...displayed].sort((a, b) => a.id - b.id);
+        // Enforce strict numerical order (1, 2, 3, 4...) for Grid View
+        const sortedGridPositions = [...displayed].sort((a, b) => a.id - b.id);
         const grid = document.createElement('div');
         grid.className = "grid grid-cols-2 gap-2";
-        grid.innerHTML = sortedNumerically.map(p => createPositionCardHtml(p)).join('');
+        grid.innerHTML = sortedGridPositions.map(p => createPositionCardHtml(p)).join('');
         container.appendChild(grid);
       } else {
+        // AIRCRAFT DOORS LAYOUT (Left vs Right)
         if (state.fleetId === '38A' && state.activeDeck === 'all') {
           ['Main', 'Upper'].forEach(deckName => {
             const deckPositions = displayed.filter(p => p.deck === deckName);
@@ -1462,6 +1485,7 @@
             container.appendChild(section);
           });
         } else {
+          // Standard single deck or Gatwick 77S/77T
           const leftPositions = sortCabinPositions(displayed.filter(p => (p.side ? p.side === 'L' : p.door.includes('L'))));
           const rightPositions = sortCabinPositions(displayed.filter(p => (p.side ? p.side === 'R' : (p.door.includes('R') || !p.door.includes('L')))));
 
